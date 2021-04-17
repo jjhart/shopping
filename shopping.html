@@ -1,0 +1,104 @@
+<html>
+<head>
+<style>
+body { 
+  font-family: "IBM Plex Sans", "Open Sans", Arial, Helvetica, sans-serif;
+}
+</style>
+
+<script>
+function render(selected) {
+  var ret = '';
+  var i=0;
+  ret += genFreeTextLinks(document.getElementById('freeText').value);
+  document.getElementsByName('cbox').forEach(function(cbox) {
+    if (cbox.checked != selected) return;
+    if (++i % 5 == 0) ret += '<br/>';
+    ret += genInstacartLink(cbox.value);
+  });
+  return ret;
+}
+
+var nonce = new Date().getTime();
+function genInstacartLink(label) {
+  return '<div style="padding-top: 5px; padding-bottom: 0;"><a href="https://www.instacart.com/store/metropolitan-market/search_v3/' + label + '#' + nonce + '">' + label + '</a></div>';
+}
+
+function genFreeTextLinks(text) {
+  var ret = '';
+  text.split('\n').forEach(function(line) { ret += genInstacartLink(line); });
+  return ret;
+}
+
+function genChecklist() {
+  var ret = '<table id="checklistTable" style:"width:100%;">';
+  
+  ret += '<tr style="height:3em;"><td colspan=2 text-align:"left"><b>Free text</b></td></tr>';
+  ret += '<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:500px;height:150px;border:1px solid #AAA;vertical-align:top;">foo</textarea></td></tr>';
+
+  checklistItems.forEach(function(row) {
+    ret += Array.isArray(row)
+      ? ('<tr><td width=50%>' + cbox(row[0]) + '</td><td>' + cbox(row[1]) + '</td></tr>')
+      : ('<tr style="height:3em;"><td colspan=2 style="align:left;"><b>' + row + '</b></td></tr>');
+  });
+  return ret + "</table>";
+}
+
+function cbox(label) {
+  return label ? '<input type="checkbox" name="cbox" value="' + label + '">' + label : '';
+}
+
+var checklistItems = [ 
+"Salad Fixings & Veg",
+ [ "Lettuce"          , "Bell Peppers"       ],
+ [ "Avocados"         , "Carrots"            ],
+ [ "Red Onion"        , "Green Onion"        ],
+ [ "Cherry Tomatoes"  , "Regular Tomatoes"   ],
+ [ ""                 , "Cucumber"           ],
+
+"Fruit"               ,
+ [ "Grapefruit"       , "Grapes"             ],
+ [ "Apples"           , "Pears"              ],
+ [ "Bananas"          , "Strawberries"       ],
+
+"Dairy"               ,
+ [ "1% Milk"          , "Big Yogurt"         ],
+ [ "Half and Half"    , "Small Yogurt"       ],
+ [ "Almond Milk"      , "Eggs"               ],
+ [ "Cream Cheese"     , "String Cheese"      ],
+ [ ""                 , "Tillamook Loaf"     ],
+
+"Bread"               ,
+ [ "Sandwich Bread"   , "English Muffins"    ],
+ [ "Essential Baking" , "Bagels"             ],
+
+"Packaged Goods"      ,
+ [ "Tuna Fish"        , "White Rice"         ],
+ [ "Peanut Butter"    , "Jelly"              ],
+ [ "Annie's"          , "La Croix"           ],
+ [ "Cereal"           , "Hearts of Palm"     ],
+ [ "Granola"          , "Salsa"              ],
+
+"Lunches"             ,
+ [ "Granola Bars"     , "Deli Meats"         ],
+ [ "Crackers"         , "Fruit snacks/bites" ],
+
+];
+
+
+
+</script>
+</head>
+<body onload="javascript:checklist.innerHTML = genChecklist();">
+<br/><br/>
+<button onclick="javascript:output.innerHTML = render(true);">Shop selected</button> 
+&nbsp;&nbsp;
+<button onclick="javascript:output.innerHTML = render(false);">Shop non-selected</button> 
+<br/>
+<br/>
+<table cellspacing=0 cellpadding=4 width=100%><tr>
+<td id="checklist" style="width: 50%; height:900px; vertical-align: top; overflow: wrap; border: 1px solid lightgrey;"></td>
+<td id="output" style="width: 50%; vertical-align: top; border: 1px solid lightgrey;"></td>
+</tr></table>
+</body>
+</html>
