@@ -54,6 +54,7 @@ var ingredients = [
 var meals = {
   "Steak, Rice, and Sauce": "2 lemon, 1 white onion, garlic, coriander seed, 1.5 lbs skirt steak, soy sauce, white vinegar, vegetable oil",
   "Seared Tuna w/ Avocado, Soy, Ginger, and Lime": "2 lbs tuna, 2 cups cilantro, 1 jalapeno, 1 avocado, ginger, garlic, 2 limes, soy sauce, olive oil",
+  "Thai Cucumber Salad": "red onion, 2 cucumbers, 1/3 cup cilantro, 1/2 cup salted peanuts, 1 jalapeno, 3 limes, garlic, fish sauce, vegetable oil",
 };
 
 
@@ -67,32 +68,63 @@ var meals = {
 function genLinks(selected) {
   var ret = '';
   ret += genFreeTextLinks(document.getElementById('freeText').value);
+  ret += genMealLinks();
   ret += genChecklistLinks(selected);
   return ret;
 }
 
-function genChecklistLinks(selected) {
-  var ret = '';
-  var i=0;
-  document.getElementsByName('cbox').forEach(function(cbox) {
-    if (cbox.checked != selected) return;
-    if (++i % 5 == 0) ret += '<br/>';
-    ret += genInstacartLink(cbox.value);
-  });
-  return ret;
-}
-
-var nonce = new Date().getTime();
-function genInstacartLink(label) {
-  return '<div style="padding-top: 5px; padding-bottom: 0;"><a href="' + SHOPPING_URL_BASE + label + '#' + nonce + '">' + label + '</a></div>';
-}
-
-var defaultFreeText = '(type stuff here)';
 function genFreeTextLinks(text) {
   var ret = '';
   text.split('\n').forEach(function(line) { if (line != defaultFreeText) ret += genInstacartLink(line); });
   return ret;
 }
+
+function genMealLinks() {
+  var ret = '';
+  var i=0;
+  document.getElementsByName('cbox_m').forEach(function(cbox) {
+    if (! cbox.checked ) return;
+    var name = cbox.value;
+    var list = meals[name];
+    ret += '<b>' + name + '</b><br/>';
+    list.split(/ *, */).forEach(function(item) { ret += genInstacartLink(item, true); });
+    ret += '</br>';
+  });
+  
+  return ret;
+}
+
+
+
+
+function genChecklistLinks(selected) {
+  var ret = '';
+  var i=0;
+  document.getElementsByName('cbox_i').forEach(function(cbox) {
+    if (cbox.checked != selected) return;
+    if (i++ % 5 == 0) ret += '<br/>';
+    ret += genInstacartLink(cbox.value);
+  });
+  return ret;
+}
+
+function genInstacartLink(label, shouldSplit) {
+  var nonce = new Date().getTime();
+  var search = label;
+  var display = label;
+
+  if (shouldSplit) {
+    var quantity = label.match(/([0-9/.]+ (?:(?:cups?|lbs|oz|tsp|tbsp|cloves?) )?)(.*)/);
+    if (quantity) { 
+      search = quantity[2];
+      display = quantity[2] + ' (' + quantity[1].trim() + ')';
+      nonce = '--------' + quantity[1].trim().replace(' ', '-').toUpperCase() + '------------' + nonce;
+    }
+  }
+
+  return '<div style="padding-top: 5px; padding-bottom: 0;"><a href="' + SHOPPING_URL_BASE + search + '#' + nonce + '">' + display + '</a></div>';
+}
+
 
 //--------------------------------------------------------------------------------
 // checklist generation
@@ -106,6 +138,7 @@ function genInputs() {
   return ret + '</table>';
 }
   
+var defaultFreeText = '(type stuff here)';
 function genFreeTextInput() {
   return '<tr style="height:3em;"><td colspan=2 text-align:"left"><b>Free text</b></td></tr>'
    +'<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:500px;height:150px;border:1px solid #AAA;vertical-align:top;">' + defaultFreeText + '</textarea></td></tr>';
@@ -116,8 +149,8 @@ function genMealInput() {
 
   var i = 0;
   Object.keys(meals).forEach(function(meal) {
-    ret += i++ % 2 == 0 ? '</td></tr><tr><td width=50%>' : '</td><td>';
-    ret += cbox(meal);
+    ret += i++ % 2 == 0 ? '</td></tr><tr><td>' : '</td><td>';
+    ret += cbox('m', meal);
   });
   ret += '</td></tr>'
 
@@ -128,14 +161,14 @@ function genIngredientInput() {
   var ret = '';
   ingredients.forEach(function(row) {
     ret += Array.isArray(row)
-      ? ('<tr><td width=50%>' + cbox(row[0]) + '</td><td>' + cbox(row[1]) + '</td></tr>')
+      ? ('<tr><td width=50%>' + cbox('i', row[0]) + '</td><td>' + cbox('i', row[1]) + '</td></tr>')
       : ('<tr style="height:3em;"><td colspan=2 style="align:left;"><b>' + row + '</b></td></tr>');
   });
   return ret;
 }
 
-function cbox(label) {
-  return label ? '<input type="checkbox" name="cbox" value="' + label + '">' + label : '';
+function cbox(type, label) {
+  return label ? '<input type="checkbox" name="cbox_' + type + '" value="' + label + '">' + label : '';
 }
 
 
