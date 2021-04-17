@@ -52,9 +52,12 @@ var ingredients = [
 ];
 
 var meals = {
-  "Steak, Rice, and Sauce": "2 lemon, 1 white onion, garlic, coriander seed, 1.5 lbs skirt steak, soy sauce, white vinegar, vegetable oil",
-  "Seared Tuna w/ Avocado, Soy, Ginger, and Lime": "2 lbs tuna, 2 cups cilantro, 1 jalapeno, 1 avocado, ginger, garlic, 2 limes, soy sauce, olive oil",
-  "Thai Cucumber Salad": "red onion, 2 cucumbers, 1/3 cup cilantro, 1/2 cup salted peanuts, 1 jalapeno, 3 limes, garlic, fish sauce, vegetable oil",
+  "Steak, Rice, and Sauce"                        : "2 lemon, 1 white onion, garlic, coriander seed, 1.5 lbs skirt steak, soy sauce, white vinegar, vegetable oil, broccoli",
+  "Seared Tuna w/ Avocado, Soy, Ginger, and Lime" : "2 lbs tuna, 2 cups cilantro, 1 jalapeno, 1 avocado, ginger, garlic, 2 limes, soy sauce, olive oil",
+  "Thai Cucumber Salad"                           : "red onion, 2 cucumbers, 1/3 cup cilantro, 1/2 cup salted peanuts, 1 jalapeno, 3 limes, garlic, fish sauce, vegetable oil",
+  "Yogurt-and-Herb Pork Tenderloin"               : "2x12 oz pork tenderloin, 1/2 cup plain greek yogurt, tzatziki, 2 tbsp fresh mint",
+  "Tofu Stir Fry"                                 : "tofu, carrots, red cabbage, bell pepper, thai eggplant, onion, celery",
+  "One-Pan Parsley Chicken & Potatoes"            : "1.5lbs boneless skinless chicken thighs, 1.5lbs Yukon Gold potatoes, 2 garlic cloves, 1/4 cup apple cider vinegar, 1 cup italian parsley, 1 lemon, 1 cup low-salt chicken broth, 1 tbsp dijon" 
 };
 
 
@@ -114,7 +117,7 @@ function genInstacartLink(label, shouldSplit) {
   var display = label;
 
   if (shouldSplit) {
-    var quantity = label.match(/([0-9/.]+ (?:(?:cups?|lbs|oz|tsp|tbsp|cloves?) )?)(.*)/);
+    var quantity = label.match(/([0-9x/.]+ (?:(?:cups?|lbs|oz|tsp|tbsp|cloves?) )?)(.*)/);
     if (quantity) { 
       search = quantity[2];
       display = quantity[2] + ' (' + quantity[1].trim() + ')';
