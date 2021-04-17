@@ -7,48 +7,14 @@ body {
 </style>
 
 <script>
-function render(selected) {
-  var ret = '';
-  var i=0;
-  ret += genFreeTextLinks(document.getElementById('freeText').value);
-  document.getElementsByName('cbox').forEach(function(cbox) {
-    if (cbox.checked != selected) return;
-    if (++i % 5 == 0) ret += '<br/>';
-    ret += genInstacartLink(cbox.value);
-  });
-  return ret;
-}
+var SHOPPING_URL_BASE = 'https://www.instacart.com/store/metropolitan-market/search_v3/';
 
-var nonce = new Date().getTime();
-function genInstacartLink(label) {
-  return '<div style="padding-top: 5px; padding-bottom: 0;"><a href="https://www.instacart.com/store/metropolitan-market/search_v3/' + label + '#' + nonce + '">' + label + '</a></div>';
-}
 
-function genFreeTextLinks(text) {
-  var ret = '';
-  text.split('\n').forEach(function(line) { ret += genInstacartLink(line); });
-  return ret;
-}
+//--------------------------------------------------------------------------------
+// ingredients & meals
+//--------------------------------------------------------------------------------
 
-function genChecklist() {
-  var ret = '<table id="checklistTable" style:"width:100%;">';
-  
-  ret += '<tr style="height:3em;"><td colspan=2 text-align:"left"><b>Free text</b></td></tr>';
-  ret += '<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:500px;height:150px;border:1px solid #AAA;vertical-align:top;">foo</textarea></td></tr>';
-
-  checklistItems.forEach(function(row) {
-    ret += Array.isArray(row)
-      ? ('<tr><td width=50%>' + cbox(row[0]) + '</td><td>' + cbox(row[1]) + '</td></tr>')
-      : ('<tr style="height:3em;"><td colspan=2 style="align:left;"><b>' + row + '</b></td></tr>');
-  });
-  return ret + "</table>";
-}
-
-function cbox(label) {
-  return label ? '<input type="checkbox" name="cbox" value="' + label + '">' + label : '';
-}
-
-var checklistItems = [ 
+var ingredients = [ 
 "Salad Fixings & Veg",
  [ "Lettuce"          , "Bell Peppers"       ],
  [ "Avocados"         , "Carrots"            ],
@@ -85,20 +51,106 @@ var checklistItems = [
 
 ];
 
+var meals = {
+  "Steak, Rice, and Sauce": "2 lemon, 1 white onion, garlic, coriander seed, 1.5 lbs skirt steak, soy sauce, white vinegar, vegetable oil",
+  "Seared Tuna w/ Avocado, Soy, Ginger, and Lime": "2 lbs tuna, 2 cups cilantro, 1 jalapeno, 1 avocado, ginger, garlic, 2 limes, soy sauce, olive oil",
+};
+
+
+
+
+
+//--------------------------------------------------------------------------------
+// link generation
+//--------------------------------------------------------------------------------
+
+function genLinks(selected) {
+  var ret = '';
+  ret += genFreeTextLinks(document.getElementById('freeText').value);
+  ret += genChecklistLinks(selected);
+  return ret;
+}
+
+function genChecklistLinks(selected) {
+  var ret = '';
+  var i=0;
+  document.getElementsByName('cbox').forEach(function(cbox) {
+    if (cbox.checked != selected) return;
+    if (++i % 5 == 0) ret += '<br/>';
+    ret += genInstacartLink(cbox.value);
+  });
+  return ret;
+}
+
+var nonce = new Date().getTime();
+function genInstacartLink(label) {
+  return '<div style="padding-top: 5px; padding-bottom: 0;"><a href="' + SHOPPING_URL_BASE + label + '#' + nonce + '">' + label + '</a></div>';
+}
+
+var defaultFreeText = '(type stuff here)';
+function genFreeTextLinks(text) {
+  var ret = '';
+  text.split('\n').forEach(function(line) { if (line != defaultFreeText) ret += genInstacartLink(line); });
+  return ret;
+}
+
+//--------------------------------------------------------------------------------
+// checklist generation
+//--------------------------------------------------------------------------------
+
+function genInputs() {
+  var ret = '<table id="checklistTable" style:"width:100%;">';
+  ret += genFreeTextInput();
+  ret += genMealInput();
+  ret += genIngredientInput();
+  return ret + '</table>';
+}
+  
+function genFreeTextInput() {
+  return '<tr style="height:3em;"><td colspan=2 text-align:"left"><b>Free text</b></td></tr>'
+   +'<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:500px;height:150px;border:1px solid #AAA;vertical-align:top;">' + defaultFreeText + '</textarea></td></tr>';
+}
+
+function genMealInput() {
+  var ret = '<tr style="height:3em;"><td colspan=2 style="align:left;"><b>Meals</b>';
+
+  var i = 0;
+  Object.keys(meals).forEach(function(meal) {
+    ret += i++ % 2 == 0 ? '</td></tr><tr><td width=50%>' : '</td><td>';
+    ret += cbox(meal);
+  });
+  ret += '</td></tr>'
+
+  return ret;
+}
+
+function genIngredientInput() {
+  var ret = '';
+  ingredients.forEach(function(row) {
+    ret += Array.isArray(row)
+      ? ('<tr><td width=50%>' + cbox(row[0]) + '</td><td>' + cbox(row[1]) + '</td></tr>')
+      : ('<tr style="height:3em;"><td colspan=2 style="align:left;"><b>' + row + '</b></td></tr>');
+  });
+  return ret;
+}
+
+function cbox(label) {
+  return label ? '<input type="checkbox" name="cbox" value="' + label + '">' + label : '';
+}
 
 
 </script>
 </head>
-<body onload="javascript:checklist.innerHTML = genChecklist();">
+<body onload="javascript:checklist.innerHTML = genInputs();">
 <br/><br/>
-<button onclick="javascript:output.innerHTML = render(true);">Shop selected</button> 
+<button onclick="javascript:output.innerHTML = genLinks(true);">Shop selected</button> 
 &nbsp;&nbsp;
-<button onclick="javascript:output.innerHTML = render(false);">Shop non-selected</button> 
+<button onclick="javascript:output.innerHTML = genLinks(false);">Shop non-selected</button> 
 <br/>
 <br/>
 <table cellspacing=0 cellpadding=4 width=100%><tr>
-<td id="checklist" style="width: 50%; height:900px; vertical-align: top; overflow: wrap; border: 1px solid lightgrey;"></td>
-<td id="output" style="width: 50%; vertical-align: top; border: 1px solid lightgrey;"></td>
+<td id="checklist" style="width: 60%; height:900px; vertical-align: top; overflow: wrap; border: 1px solid lightgrey;"></td>
+<td id="output" style="width: 40%; vertical-align: top; border: 1px solid lightgrey;"></td>
 </tr></table>
 </body>
 </html>
