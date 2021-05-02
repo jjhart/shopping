@@ -4,6 +4,13 @@
 body { 
   font-family: "IBM Plex Sans", "Open Sans", Arial, Helvetica, sans-serif;
 }
+p.label {
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
 </style>
 
 <script>
@@ -52,12 +59,16 @@ var ingredients = [
 ];
 
 var meals = {
-  "Steak, Rice, and Sauce"                        : "2 lemon, 1 white onion, garlic, coriander seed, 1.5 lbs skirt steak, soy sauce, white vinegar, vegetable oil, broccoli",
+  "One-Pan Parsley Chicken & Potatoes"            : "1.5 lbs boneless skinless chicken thighs, 1.5 lbs Yukon Gold potatoes, 2 garlic cloves, 1/4 cup apple cider vinegar, 1 cup italian parsley, 1 lemon, 1 cup low-salt chicken broth, 1 tbsp dijon",
+  "Rigatoni Bolognese"                            : "2 lbs ground beef, 2 yellow onion, 2 celery stalk, 2 carrot, 2x28 oz crushed tomatoes, 1/2 cup italian parsley, 16 basil leaves, 1/2 cup pecorino romano, 4 garlic cloves, olive oil",
+  "Ruf Ruf Fajitas"                               : "2 avocados, 2/3 cup sour cream, 4 jalapenos, 2 cups cilantro, 6 limes, 2 lbs peeled deveined shrimp, fajita seasoning, 2 bell peppers, 6 pineapple rings, 8 flour tortillas, vegetable oil",
+  "Salmon Salad /w Sesame Dressing"               : "1.5 lbs salmon filet, cherry tomatoes, 2 avocados, spring lettuce mix",
   "Seared Tuna w/ Avocado, Soy, Ginger, and Lime" : "2 lbs tuna, 2 cups cilantro, 1 jalapeno, 1 avocado, ginger, garlic, 2 limes, soy sauce, olive oil",
+  "Slow Cooker Tom Kha Gai"                       : "6 lemongrass stalks, 6 cups low-sodium chicken broth, 1/2 cup fish sauce, ginger, 12 kaffir lime leaves, 2 shallots, 6 thai chiles, 3 lbs boneless skinless chicken thighs, 8 oz shiitake mushrooms, 2x13.5 oz coconut milk, 2 carrots, 6 limes, 1/2 cup cilantro, 4 tbsp thai basil, green onions, chili oil sauce",
+  "Steak, Rice, and Sauce"                        : "2 lemon, 1 white onion, garlic, coriander seed, 1.5 lbs skirt steak, soy sauce, white vinegar, vegetable oil, broccoli",
   "Thai Cucumber Salad"                           : "red onion, 2 cucumbers, 1/3 cup cilantro, 1/2 cup salted peanuts, 1 jalapeno, 3 limes, garlic, fish sauce, vegetable oil",
-  "Yogurt-and-Herb Pork Tenderloin"               : "2x12 oz pork tenderloin, 1/2 cup plain greek yogurt, tzatziki, 2 tbsp fresh mint",
   "Tofu Stir Fry"                                 : "tofu, carrots, red cabbage, bell pepper, thai eggplant, onion, celery",
-  "One-Pan Parsley Chicken & Potatoes"            : "1.5 lbs boneless skinless chicken thighs, 1.5 lbs Yukon Gold potatoes, 2 garlic cloves, 1/4 cup apple cider vinegar, 1 cup italian parsley, 1 lemon, 1 cup low-salt chicken broth, 1 tbsp dijon" 
+  "Yogurt-and-Herb Pork Tenderloin"               : "2x12 oz pork tenderloin, 1/2 cup plain greek yogurt, tzatziki, 2 tbsp fresh mint",
 };
 
 
@@ -144,7 +155,7 @@ function genInputs() {
 var defaultFreeText = '(type stuff here)';
 function genFreeTextInput() {
   return '<tr style="height:3em;"><td colspan=2 text-align:"left"><b>Free text</b></td></tr>'
-   +'<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:500px;height:150px;border:1px solid #AAA;vertical-align:top;">' + defaultFreeText + '</textarea></td></tr>';
+   +'<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:100%;height:150px;border:1px solid #AAA;vertical-align:top;">' + defaultFreeText + '</textarea></td></tr>';
 }
 
 function genMealInput() {
@@ -171,7 +182,8 @@ function genIngredientInput() {
 }
 
 function cbox(type, label) {
-  return label ? '<input type="checkbox" name="cbox_' + type + '" value="' + label + '">' + label : '';
+  if (!label) return '';
+  return '<p class="label"><input type="checkbox" name="cbox_' + type + '" value="' + label + '">' + label + '</p>';
 }
 
 
@@ -185,8 +197,8 @@ function cbox(type, label) {
 <br/>
 <br/>
 <table cellspacing=0 cellpadding=4 width=100%><tr>
-<td id="checklist" style="width: 60%; height:900px; vertical-align: top; overflow: wrap; border: 1px solid lightgrey;"></td>
-<td id="output" style="width: 40%; vertical-align: top; border: 1px solid lightgrey;"></td>
+<td id="checklist" style="width: 50%; height:900px; vertical-align: top; overflow: wrap; border: 1px solid lightgrey;"></td>
+<td id="output" style="width: 50%; vertical-align: top; border: 1px solid lightgrey;"></td>
 </tr></table>
 </body>
 </html>
