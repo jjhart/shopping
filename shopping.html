@@ -1,8 +1,22 @@
 <html>
 <head>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans" />
 <style>
-body { 
-  font-family: "IBM Plex Sans", "Open Sans", Arial, Helvetica, sans-serif;
+body, table, p, button, input, textarea { 
+  font-family: "Google Sans"; 
+  font-weight: 400;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.8);
+}
+:link {
+  color: green;
+  text-decoration: none;
+}
+:visited, :active {
+  color: #999;
+}
+:hover {
+  color: blue;
 }
 p.label {
   width: 90%;
@@ -10,7 +24,20 @@ p.label {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+  border: 1px solid white;
 }
+p.label:hover {
+  background-color: rgba(0, 255, 0, 0.1);
+  border: 1px dotted lightgrey;
+}
+p.label input {
+  vertical-align: bottom;
+}
+p.label {
+  padding: 2;
+  vertical-align: top;
+}
+  
 </style>
 
 <script>
@@ -35,8 +62,8 @@ var ingredients = [
  [ "Bananas"          , "Strawberries"       ],
 
 "Dairy"               ,
- [ "Lowfat Milk"      , "Big Yogurt"         ],
- [ "Half and Half"    , "Small Yogurt"       ],
+ [ "Lowfat Milk"      , "Greek gods yogurt"  ],
+ [ "Half and Half"    , "Fage Yogurt"        ],
  [ "Almond Milk"      , "Eggs"               ],
  [ "Cream Cheese"     , "String Cheese"      ],
  [ ""                 , "Tillamook Loaf"     ],
@@ -53,7 +80,7 @@ var ingredients = [
  [ "Granola"          , "Salsa"              ],
 
 "Lunches"             ,
- [ "Granola Bars"     , "Deli Meats"         ],
+ [ "Granola Bars"     , "Sliced Turkey"      ],
  [ "Crackers"         , "Fruit snacks/bites" ],
 
 ];
@@ -61,7 +88,8 @@ var ingredients = [
 var meals = {
   "" : "" // dummy just so everything else can have leading comma for ease of alphasort
   ,"Chicken Caesar"                                : "2 lbs chicken breasts, croutons, romaine, cherry tomatoes, parmesan cheese, caesar dressing, hearts of palm"
-  ,"Fettucine with Zucchini"                       : "1lb zucchini, 1 yellow onion, 1 cup pine nuts, 1lb fresh fettucine, flat-leaf parsley, 1/2 cup Grana Padano, olive oil, garlic"
+  ,"Chorizo & White Bean Stew (doubled)"           : "2 lbs mild italian sausage, 2 large onion, 8 garlic cloves, thyme, 4 15oz cans cannellini beans, 4 cups chicken broth, 10 oz baby spinach"
+  ,"Fettucine with Zucchini"                       : "1 lb zucchini, 1 yellow onion, 1 cup pine nuts, 1lb fresh fettucine, flat-leaf parsley, 1/2 cup Grana Padano, olive oil, garlic"
   ,"Grilled Pork Tenderloin ala Rodriguez"         : "1 cup guava jelly or apricot jam, 1/2 cup dijon, 4 cups orange juice, 1 red onion, 4 cloves garlic, 4 limes, 1 habanero, 1/2 cup cilantro, 1 tsp cumin seeds, 2x1.5 lb pork tenderloin"
   ,"Italian Tuna Salad"                            : "1 lemons, 2x5oz cans St Jude Tuna, pitted kalamata olives, 1/2 cup fennel"
   ,"Linguine with Clams"                           : "2 lbs cockles, 1 lb linguine, 1/3 cup bottled clam juice, 1/3 cup dry white wine, flat-leaf parsley, medium onion, essential baking rosemary diamante, 6 garlic cloves, olive oil, red pepper flakes, dried oregano"
@@ -69,11 +97,11 @@ var meals = {
   ,"Pot stickers with Tomato Sauce"                : "Frozen dumplings, canned tomatoes, garlic, thyme, fish sauce, brown sugar, cream, parmesan, olive oil, red pepper flakes"
   ,"Power Outage Pasta"                            : "8 oz sweet italian sausage, 1 large onion, 1 red bell pepper, 1 yellow bell pepper, 4 garlic cloves, 1/4 cup dry white wine, 1x28oz whole tomatoes, 1 tsp dried oregano, 1 lb bucatini, 1/2 cup italian parsley, 1/2 cup Gran Padano"
   ,"Rice and Bean Bowl"                            : "black beans, taco seasoning, bell peppers, white onion, avocado, cherry tomatoes, lettuce"
-  ,"Rigatoni Bolognese"                            : "2 lbs ground beef, 2 yellow onion, 2 celery stalk, 2 carrot, 2x28 oz crushed tomatoes, 1/2 cup italian parsley, 16 basil leaves, 1/2 cup pecorino romano, 4 garlic cloves, olive oil"
+  ,"Rigatoni Bolognese (doubled)"                  : "2 lbs ground beef, 2 yellow onion, 2 celery stalk, 2 carrot, 2x28 oz crushed tomatoes, 1/2 cup italian parsley, 16 basil leaves, 1/2 cup pecorino romano, 4 garlic cloves, olive oil, garlic bread"
   ,"Ruf Ruf Fajitas"                               : "2 avocados, 2/3 cup sour cream, 4 jalapenos, 2 cups cilantro, 6 limes, 2 lbs peeled deveined shrimp, fajita seasoning, 2 bell peppers, 6 pineapple rings, 8 flour tortillas, vegetable oil"
-  ,"Salmon Salad /w Sesame Dressing"               : "1.5 lbs salmon filet, cherry tomatoes, 2 avocados, spring lettuce mix"
+  ,"Salmon Salad w/ Sesame Dressing"               : "1.5 lbs salmon filet, cherry tomatoes, 2 avocados, spring lettuce mix"
   ,"Seared Tuna w/ Avocado, Soy, Ginger, and Lime" : "2 lbs tuna, 2 cups cilantro, 1 jalapeno, 1 avocado, ginger, garlic, 2 limes, soy sauce, olive oil"
-  ,"Slow Cooker Tom Kha Gai"                       : "6 lemongrass stalks, 6 cups low-sodium chicken broth, 1/2 cup fish sauce, ginger, 12 kaffir lime leaves, 2 shallots, 6 thai chiles, 3 lbs boneless skinless chicken thighs, 8 oz shiitake mushrooms, 2x13.5 oz coconut milk, 2 carrots, 6 limes, 1/2 cup cilantro, 4 tbsp thai basil, green onions, chili oil sauce"
+  ,"Tom Kha Gai (doubled)"                         : "6 lemongrass stalks, 6 cups low-sodium chicken broth, 1/2 cup fish sauce, ginger, 12 kaffir lime leaves, 2 shallots, 6 thai chiles, 3 lbs boneless skinless chicken thighs, 8 oz shiitake mushrooms, 2x13.5 oz coconut milk, 2 carrots, 6 limes, 1/2 cup cilantro, 4 tbsp thai basil, green onions, chili oil sauce"
   ,"Spiced Chickpea Stew w/ Coconut & Turmeric"    : "1 yellow onion, 1 piece ginger, turmeric, red pepper flakes, 2x15 oz cans chickpeas, 2x15 cans coconut milk, 2 cups vegetable stock, kale, 1 cup mint leaves, yogurt, pita, 1/4 cup olive oil, 4 garlic cloves"
   ,"Steak, Rice, and Sauce"                        : "2 lemon, 1 white onion, garlic, coriander seed, 1.5 lbs skirt steak, soy sauce, white vinegar, vegetable oil, broccoli"
   ,"Tacos"                                         : "1lb ground beef, taco seasoning, taco shells, cherry tomatoes, lettuce, cheddar cheese, avocado, salsa, white onion"
@@ -87,7 +115,7 @@ var meals = {
 
 
 //--------------------------------------------------------------------------------
-// link generation
+// Instacart link generation (from selected items)
 //--------------------------------------------------------------------------------
 
 function genLinks(selected) {
@@ -111,16 +139,13 @@ function genMealLinks() {
     if (! cbox.checked ) return;
     var name = cbox.value;
     var list = meals[name];
-    ret += '<b>' + name + '</b><br/>';
+    ret += '<br/><b>' + name + '</b><br/>';
     list.split(/ *, */).forEach(function(item) { ret += genInstacartLink(item, true); });
     ret += '</br>';
   });
   
   return ret;
 }
-
-
-
 
 function genChecklistLinks(selected) {
   var ret = '';
@@ -151,6 +176,7 @@ function genInstacartLink(label, shouldSplit) {
 }
 
 
+
 //--------------------------------------------------------------------------------
 // checklist generation
 //--------------------------------------------------------------------------------
@@ -165,8 +191,8 @@ function genInputs() {
   
 var defaultFreeText = '(type stuff here)';
 function genFreeTextInput() {
-  return '<tr style="height:3em;"><td colspan=2 text-align:"left"><b>Free text</b></td></tr>'
-   +'<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:100%;height:150px;border:1px solid #AAA;vertical-align:top;">' + defaultFreeText + '</textarea></td></tr>';
+  return '<tr style="height:4em;"><td colspan=2 text-align:"left"><b>Free text</b></td></tr>'
+   +'<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:100%;height:150px;border:1px solid #AAA;vertical-align:top;padding:15px;">' + defaultFreeText + '</textarea></td></tr>';
 }
 
 function genMealInput() {
@@ -188,14 +214,16 @@ function genIngredientInput() {
   ingredients.forEach(function(row) {
     ret += Array.isArray(row)
       ? ('<tr><td width=50%>' + cbox('i', row[0]) + '</td><td>' + cbox('i', row[1]) + '</td></tr>')
-      : ('<tr style="height:3em;"><td colspan=2 style="align:left;"><b>' + row + '</b></td></tr>');
+      : ('<tr style="height:5em;vertical-align:bottom;"><td colspan=2 style="align:left;"><b>' + row + '</b></td></tr>');
   });
   return ret;
 }
 
 function cbox(type, label) {
   if (!label) return '';
-  return '<p class="label"><input type="checkbox" name="cbox_' + type + '" value="' + label + '">' + label + '</p>';
+  var cboxName = "cbox_" + type;
+  var cboxId = cboxName + "_" + label;
+  return '<p class="label" onclick="javascript:document.getElementById(\''+cboxId+'\').click();"><input onclick="javascript:event.cancelBubble=true;" type="checkbox" id="'+cboxId+'" name="'+cboxName+'" value="' + label + '">' + label + '</p>';
 }
 
 
