@@ -41,7 +41,9 @@ p.label {
 </style>
 
 <script>
-var SHOPPING_URL_BASE = 'https://www.instacart.com/store/metropolitan-market/search_v3/';
+var STORE = 'metropolitan-market'; 
+// var STORE = 'qfc';
+var SHOPPING_URL_BASE = 'https://www.instacart.com/store/' + STORE + '/search_v3/';
 
 
 //--------------------------------------------------------------------------------
@@ -103,7 +105,7 @@ var meals = {
   ,"Pot stickers with Tomato Sauce"                : "Frozen dumplings, canned tomatoes, garlic, thyme, fish sauce, brown sugar, cream, parmesan, olive oil, red pepper flakes"
   ,"Power Outage Pasta"                            : "8 oz sweet italian sausage, 1 large onion, 1 red bell pepper, 1 yellow bell pepper, 4 garlic cloves, 1/4 cup dry white wine, 1x28oz whole tomatoes, 1 tsp dried oregano, 1 lb bucatini, 1/2 cup italian parsley, 1/2 cup Gran Padano"
   ,"Rice and Bean Bowl"                            : "2 cans black beans, taco seasoning, 1 bell pepper, cilantro, limes (for rice), white onion, avocado, cherry tomatoes, lettuce"
-  ,"Rigatoni Bolognese (doubled)"                  : "2 lbs ground beef, 2 yellow onion, 2 celery stalk, 2 carrot, 2x28 oz crushed tomatoes, 1/2 cup italian parsley, 16 basil leaves, 1/2 cup pecorino romano, 4 garlic cloves, olive oil, garlic bread"
+  ,"Rigatoni Bolognese (doubled)"                  : "2 lbs ground beef, 1 lb rigatoni, 2 yellow onion, 2 celery stalk, 2 carrot, 2x28 oz crushed tomatoes, 1/2 cup italian parsley, 16 basil leaves, 1/2 cup pecorino romano, 4 garlic cloves, olive oil, garlic bread"
   ,"Ruf Ruf Fajitas"                               : "2 avocados, 2/3 cup sour cream, 4 jalapenos, 2 cups cilantro, 6 limes, 2 lbs peeled deveined shrimp, fajita seasoning, 2 bell peppers, 6 pineapple rings, 8 flour tortillas, vegetable oil"
   ,"Salmon Salad w/ Sesame Dressing"               : "1.5 lbs salmon filet, cherry tomatoes, 2 avocados, spring lettuce mix"
   ,"Seared Scallops with Pan Sauce"                : "1.5 lbs sea scallops, 1 lemon, chives, 1/2 cupy dry white wine, garlic, butter, olive oil"
