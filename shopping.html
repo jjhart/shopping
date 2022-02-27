@@ -44,7 +44,7 @@ p.label {
 var STORE = 'metropolitan-market'; 
 // var STORE = 'qfc';
 var SHOPPING_URL_BASE = 'https://www.instacart.com/store/' + STORE + '/search_v3/';
-
+var NOW = new Date().getTime();
 
 //--------------------------------------------------------------------------------
 // ingredients & meals
@@ -173,12 +173,12 @@ function genChecklistLinks(selected) {
 }
 
 function genInstacartLink(label, shouldSplit) {
-  var nonce = new Date().getTime();
+  var nonce = NOW;
   var search = label;
   var display = label;
 
   if (shouldSplit) {
-    var quantity = label.match(/([0-9x/.]+ ?(?:(?:cups?|lbs?|oz|tsps?|tbsps?|pieces?|inche?s?|cans?|cloves?) )?)(.*)/);
+    var quantity = label.match(/([0-9/.]+x? ?(?:(?:cups?|lbs?|oz|tsps?|tbsps?|pieces?|inche?s?|cans?|cloves?) )?)(.*)/);
     if (quantity) { 
       search = quantity[2];
       display = quantity[2] + ' (' + quantity[1].trim() + ')';
