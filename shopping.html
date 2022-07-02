@@ -175,21 +175,35 @@ function genChecklistLinks(selected) {
   return ret;
 }
 
-function genInstacartLink(label, shouldSplit) {
+function genInstacartUrl(label, shouldSplit) {
   var nonce = NOW;
   var search = label;
-  var display = label;
 
   if (shouldSplit) {
     var quantity = label.match(/([0-9/.]+x? ?(?:(?:cups?|lbs?|oz|tsps?|tbsps?|pieces?|inche?s?|cans?|cloves?) )?)(.*)/);
     if (quantity) { 
       search = quantity[2];
-      display = quantity[2] + ' (' + quantity[1].trim() + ')';
       nonce = '--------' + quantity[1].trim().replace(' ', '-').toUpperCase() + '------------' + nonce;
     }
   }
 
-  return '<div style="padding-top: 5px; padding-bottom: 0;"><a href="' + SHOPPING_URL_BASE + search + '#' + nonce + '">' + display + '</a></div>';
+  var ret = SHOPPING_URL_BASE + search + '#' + nonce;
+  // window.open(url, "_blank"); // kills chrome if > 7 or so tabs
+  return ret;
+}
+
+function genInstacartLink(label, shouldSplit) {
+  var url = genInstacartUrl(label, shouldSplit);
+  var display = label;
+
+  if (shouldSplit) {
+    var quantity = label.match(/([0-9/.]+x? ?(?:(?:cups?|lbs?|oz|tsps?|tbsps?|pieces?|inche?s?|cans?|cloves?) )?)(.*)/);
+    if (quantity) { 
+      display = quantity[2] + ' (' + quantity[1].trim() + ')';
+    }
+  }
+
+  return '<div style="padding-top: 5px; padding-bottom: 0;"><a target="_blank" href="' + url + '">' + display + '</a></div>';
 }
 
 
