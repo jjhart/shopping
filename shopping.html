@@ -91,8 +91,8 @@ var ingredients = [
 var meals = {
   ""                                                          : "" // dummy just so everything else can have leading comma for ease of alphasort
   ,"3-Ingredient Orchiette w Sausage & Fennel"                : "16oz orechiette or other small pasta (bowtie?), 1 lb sweet italian sausage no casings, 1 bulb fennel, dry white wine, 1/2 cup grated parmesan, chili flakes"
-  ,"Barley and Beef Stew (doubled)"                           : "2 lbs beef chuck or round, 2 onions, 6 cups beef stock, 4 carrots, celery, 4 potatoes, 16 garlic cloves, 4 cups sliced mushrooms, 2/3 cup pearled barley, fresh thyme, italian parsley"
   ,"BLT"                                                      : "bacon, bread, lettuce, tomatoes"
+  ,"Barley and Beef Stew (doubled)"                           : "2 lbs beef chuck or round, 2 onions, 6 cups beef stock, 4 carrots, celery, 4 potatoes, 16 garlic cloves, 4 cups sliced mushrooms, 2/3 cup pearled barley, fresh thyme, italian parsley"
   ,"Chicken Caesar"                                           : "2 lbs chicken breasts, croutons, romaine, cherry tomatoes, parmesan cheese, caesar dressing, hearts of palm"
   ,"Chorizo & White Bean Stew (doubled)"                      : "2 lbs mild italian sausage, 2 large onion, 8 garlic cloves, thyme, 4 15oz cans cannellini beans, 4 cups chicken broth, 10 oz baby spinach"
   ,"Coconut Red Lentils w Spinach, Cashews, & Lime (doubled)" : "2 onions, 2 cups red lentils, 2 cans light coconut milk, 4 limes, 1 cup whole cashews, 2 cups spinach, 1/2 cup cilantro, , olive oil , curry power , mustard seeds , turmeric"
@@ -108,7 +108,7 @@ var meals = {
   ,"One-Pan Parsley Chicken & Potatoes"                       : "1.5 lbs boneless skinless chicken thighs, 1.5 lbs Yukon Gold potatoes, 2 garlic cloves, 1/4 cup apple cider vinegar, 1 cup italian parsley, 1 lemon, 1 cup low-salt chicken broth, 1 tbsp dijon"
   ,"Pot stickers with Tomato Sauce"                           : "Frozen dumplings, canned tomatoes, garlic, thyme, fish sauce, brown sugar, cream, parmesan, olive oil, red pepper flakes"
   ,"Power Outage Pasta"                                       : "8 oz sweet italian sausage, 1 large onion, 1 red bell pepper, 1 yellow bell pepper, 4 garlic cloves, 1/4 cup dry white wine, 1x28oz whole tomatoes, 1 tsp dried oregano, 1 lb bucatini, 1/2 cup italian parsley, 1/2 cup Gran Padano"
-  ,"Rice and Bean Bowl"                                       : "2 cans black beans, taco seasoning, 1 bell pepper, cilantro, limes (for rice), white onion, avocado, cherry tomatoes, lettuce"
+  ,"Rice and Bean Bowl"                                       : "2 cans black beans, taco seasoning, 1 bell pepper, cilantro, limes, white onion, avocado, cherry tomatoes, lettuce"
   ,"Rigatoni Bolognese (doubled)"                             : "2 lbs ground beef, 1 lb rigatoni, 2 yellow onion, 2 celery stalk, 2 carrot, 2x28 oz crushed tomatoes, 1/2 cup italian parsley, 16 basil leaves, 1/2 cup pecorino romano, 4 garlic cloves, olive oil, garlic bread"
   ,"Roast Chicken with Saffron and Lemons"                    : "1 free-range chicken, 2 tsp saffron threads, peppercorns, fresh rosemary, flat-leaf parsley, 2 lemons"
   ,"Ruf Ruf Fajitas"                                          : "2 avocados, 2/3 cup sour cream, 4 jalapenos, 2 cups cilantro, 6 limes, 2 lbs peeled deveined shrimp, fajita seasoning, 2 bell peppers, 6 pineapple rings, 8 flour tortillas, vegetable oil"
@@ -120,15 +120,16 @@ var meals = {
   ,"Sole En Papillote"                                        : "ciabatta bread, 4x6 oz sole filets, 1 cup grape tomatoes, fresh thyme, 2 tbsp capers, kalamata olives, 8 tsp dry white wine, garlic, red pepper flakes, olive oil"
   ,"Spiced Chickpea Stew w/ Coconut & Turmeric"               : "1 yellow onion, 1 piece ginger, turmeric, red pepper flakes, 2x15 oz cans chickpeas, 2x15 cans coconut milk, 2 cups vegetable stock, kale, 1 cup mint leaves, yogurt, pita, 1/4 cup olive oil, 4 garlic cloves"
   ,"Spicy Mushroom Soup (doubled)"                            : "4 pounds sliced cremini mushrooms, 5 cups vegetable stock, 2 yellow onions, 1 cup heavy cream, 1 lemon, 1/2 cup sour cream, 8 tsbp butter, 6 tbsp flour, worcestershire sauce, parsley, dill, thyme, paprika, red pepper flakes, garlic powder"
+  ,"Steak salad with Roquefort & Catalina Dressing (doubled)" : "ketchup, grainy mustard, sugar, garlic, 3 limes, balsamic vinegar, 2 lbs skirt steak, 1.5 lb arugula, 1/2 lb roquefort"
   ,"Steak, Rice, and Sauce"                                   : "broccoli, 1.5 lbs skirt steak, 2 lemon, 1 white onion, soy sauce, white vinegar, garlic, coriander seed, vegetable oil"
   ,"Tacos"                                                    : "1lb ground beef, taco seasoning, taco shells, cherry tomatoes, lettuce, cheddar cheese, avocado, salsa, white onion"
   ,"Thai Chicken with Basil (doubled)"                        : "2 lbs boneless skinless chicken breast, 6 shallots, 4 cups basil (2 big clamshells), 6 garlic cloves, 6 thai chiles, fish sauce, oyster sauce, white vinegar, sugar"
   ,"Thai Cucumber Salad"                                      : "red onion, 2 cucumbers, 1/3 cup cilantro, 1/2 cup salted peanuts, 1 jalapeno, 3 limes, garlic, fish sauce, vegetable oil"
   ,"Tofu Stir Fry"                                            : "tofu, carrots, red cabbage, bell pepper, thai eggplant, onion, celery, cherry tomatoes"
-  ,"Tom Kha Gai (doubled)"                                    : "6 lemongrass stalks, 6 cups low-sodium chicken broth, 1/2 cup fish sauce, ginger, 12 kaffir lime leaves, 2 shallots, 6 thai chiles, 3 lbs boneless skinless chicken thighs, 8 oz shiitake mushrooms, 2x13.5 oz coconut milk, 2 carrots, 6 limes, 1/2 cup cilantro, 4 tbsp thai basil, green onions, chili oil sauce"
-  ,"Yogurt-and-Herb Pork Tenderloin"                          : "2x12 oz pork tenderloin, 1/2 cup plain greek yogurt, tzatziki, 2 tbsp fresh mint"
+  ,"Tom Kha Gai (doubled)"                                    : "6 lemongrass stalks, 6 cups low-sodium chicken broth, 1/2 cup fish sauce, ginger, 12 lime leaves, 2 shallots, 6 thai chiles, 3 lbs boneless skinless chicken thighs, 8 oz shiitake mushrooms, 2x13.5 oz coconut milk, 2 carrots, 6 limes, 1/2 cup cilantro, 4 tbsp thai basil, green onions, chili oil sauce"
   ,"Veggie Enchiladas"                                        : "flour tortillas, sliced cremini mushrooms, orange bell peppers, yellow onion, zucchini, frozen corn, shredded pepper jack, cumin, chile powder, cilantro, pinto beans, frontera enchilada sauce, sour cream, 1 lime"
   ,"Wilted Spinach and Apple Salad"                           : "5 slices lean bacon, 2 apples - fuji/gala/braeburn, 2 shallots, 1.25 cups apple cider, 1/4 cup cider vinegar, 1/4 cup apple juice concentrate, dijon mustard, 10 oz spinach, 2 eggs, 1/2 cup walnuts"
+  ,"Yogurt-and-Herb Pork Tenderloin"                          : "2x12 oz pork tenderloin, 1/2 cup plain greek yogurt, tzatziki, 2 tbsp fresh mint"
 };
 
 
