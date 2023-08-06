@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta charset="UTF-8">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans" />
 <style>
 body, table, p, button, input, textarea { 
@@ -95,7 +96,8 @@ var meals = {
   ,"Barley and Beef Stew (doubled)"                           : "2 lbs beef chuck or round, 2 onions, 6 cups beef stock, 4 carrots, celery, 4 potatoes, 16 garlic cloves, 4 cups sliced mushrooms, 2/3 cup pearled barley, fresh thyme, italian parsley"
   ,"Chicken Caesar"                                           : "2 lbs chicken breasts, croutons, romaine, cherry tomatoes, parmesan cheese, caesar dressing, hearts of palm"
   ,"Chorizo & White Bean Stew (doubled)"                      : "2 lbs mild italian sausage, 2 large onion, 8 garlic cloves, thyme, 4 15oz cans cannellini beans, 4 cups chicken broth, 10 oz baby spinach"
-  ,"Coconut Red Lentils w Spinach, Cashews, & Lime (doubled)" : "2 onions, 2 cups red lentils, 2 cans light coconut milk, 4 limes, 1 cup whole cashews, 2 cups spinach, 1/2 cup cilantro, , olive oil , curry power , mustard seeds , turmeric"
+  ,"Citrus Beef/Chicken/etc Rice Bowls"                       : "PCC kobe beef skewers, PCC gojuchang vinagrette, Orange Juice, 2 limes,  2 large oranges, 2 persian cucumbers, 4 scallions, Sriracha, honey, 2 tsp soy suace, 1/4 cup vegetable oil"
+  ,"Coconut Red Lentils w Spinach, Cashews, & Lime (doubled)" : "2 onions, 2 cups red lentils, 2 cans light coconut milk, 4 limes, 1 cup whole cashews, 2 cups spinach, 1/2 cup cilantro, olive oil , curry power , mustard seeds , turmeric"
   ,"Fettucine with Zucchini"                                  : "1 lb zucchini, 1 yellow onion, 1 cup pine nuts, 1lb fresh fettucine, flat-leaf parsley, 1/2 cup Grana Padano, olive oil, garlic"
   ,"Grilled Chicken w/ lemon,garlic,oregano"                  : "12 boneless skinless chicken thighs, 7 lemons, fresh oregano, garlic, olive oil"
   ,"Grilled Pork Tenderloin ala Rodriguez"                    : "1 cup guava jelly or apricot jam, 1/2 cup dijon, 4 cups orange juice, 1 red onion, 4 cloves garlic, 4 limes, 1 habanero, 1/2 cup cilantro, 1 tsp cumin seeds, 2x1.5 lb pork tenderloin"
@@ -227,8 +229,21 @@ function genInputs() {
   
 var defaultFreeText = '(type stuff here)';
 function genFreeTextInput() {
-  return '<tr style="height:4em;"><td colspan=2 text-align:"left"><b>Free text</b></td></tr>'
+  return '<tr style="height:4em;"><td colspan=2><b>Free text</b></td></tr>'
    +'<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:100%;height:150px;border:1px solid #AAA;vertical-align:top;padding:15px;">' + defaultFreeText + '</textarea></td></tr>';
+}
+
+// yes this could be done with CSS
+function printMode() {
+  var checklist = document.getElementById('checklist');
+  var output = document.getElementById('output');
+  var buttons = document.getElementById('buttons');
+  checklist.innerHTML = '';
+  checklist.style.width = '0px';
+  checklist.style.border = '';
+  output.style.width='100%';
+  output.style.border='';
+  buttons.innerHTML='';
 }
 
 function genMealInput() {
@@ -266,13 +281,17 @@ function cbox(type, label) {
 </script>
 </head>
 <body onload="javascript:checklist.innerHTML = genInputs();">
+<div id="buttons">
 <br/><br/>
 <button onclick="javascript:output.innerHTML = genLinks(true);">Shop selected</button> 
 &nbsp;&nbsp;
 <button onclick="javascript:output.innerHTML = genLinks(false);">Shop non-selected</button> 
+&nbsp;&nbsp;
+<button onclick="javascript:printMode();">Print view &nbsp; 🖨 </button> 
 <br/>
 <br/>
-<table cellspacing=0 cellpadding=4 width=100%><tr>
+</div>
+<table id=mainTable cellspacing=0 cellpadding=4 width=100%><tr>
 <td id="checklist" style="width: 50%; height:900px; vertical-align: top; overflow: wrap; border: 1px solid lightgrey;"></td>
 <td id="output" style="width: 50%; vertical-align: top; border: 1px solid lightgrey;"></td>
 </tr></table>
