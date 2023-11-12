@@ -141,6 +141,21 @@ var meals = {
 //--------------------------------------------------------------------------------
 // printable list generation
 //--------------------------------------------------------------------------------
+
+/** categorized by meal */
+function menuMode() {
+  var checklist = document.getElementById('checklist');
+  var output = document.getElementById('output');
+  var buttons = document.getElementById('buttons');
+  checklist.innerHTML = '';
+  checklist.style.width = '0px';
+  checklist.style.border = '';
+  output.style.width='100%';
+  output.style.border='';
+  buttons.innerHTML='';
+}
+
+/** categorized by grocery department */
 function printMode() {
   var checklist = document.getElementById('checklist');
   var output = document.getElementById('output');
@@ -358,6 +373,8 @@ function invertCheckboxes() {
 <button onclick="javascript:output.innerHTML = genLinks();">Shop selected</button> 
 &nbsp;&nbsp;
 <button onclick="javascript:printMode();">Print selected &nbsp; 🖨 </button> 
+&nbsp;&nbsp;
+<button onclick="javascript:menuMode();">Print menu &nbsp; 🖨 </button> 
 <br/>
 <br/>
 </div>
