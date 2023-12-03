@@ -38,6 +38,10 @@ p.label {
   padding: 2;
   vertical-align: top;
 }
+div.weekdays h1 {
+  font-size: 16pt;
+  padding-bottom: 80px;
+}
   
 </style>
 
@@ -81,11 +85,11 @@ var ingredients = [
  [ "Cereal"           , "Hearts of Palm"     ],
  [ "Granola"          , "Salsa"              ],
 
-"Lunches"             , "o",
+"Lunches/Other"       , "o",
  [ "Granola Bars"     , "Sliced Turkey"      ],
  [ "Crackers"         , "Fruit snacks/bites" ],
  [ "Frozen Burritos"  , "Frozen Pizza"       ],
- [ "Canned Soup" , "" ]
+ [ "Canned Soup"      , "Frozen dumplings" ]
 
 ];
 
@@ -141,6 +145,28 @@ var meals = {
 //--------------------------------------------------------------------------------
 // printable list generation
 //--------------------------------------------------------------------------------
+
+/** for printing N copies for weekly planning */
+function planningMode() {
+  // meals
+  rmNode(document.getElementById('table_m').parentNode.parentNode); // remove enclosing tr
+  rmNode(document.getElementById('table_freetext').parentNode.parentNode);
+  rmNode(document.getElementById('buttons'));
+  output.innerHTML = `
+  <div class="weekdays">
+  <h1>Sunday</h1>
+  <h1>Monday</h1>
+  <h1>Tuesday</h1>
+  <h1>Wednesday</h1>
+  <h1>Thursday</h1>
+  <h1>Friday</h1>
+  <h1>Saturday</h1>
+  </div>
+  `;
+}
+function rmNode(child) {
+  child.parentNode.removeChild(child);
+}
 
 /** categorized by meal */
 function menuMode() {
@@ -308,7 +334,7 @@ function splitQuantity(label) {
 //--------------------------------------------------------------------------------
 
 function genInputs() {
-  var ret = '<table id="checklistTable" style:"width:100%;">';
+  var ret = '<table id="checklistTable" style="width:100%;">';
   ret += genFreeTextInput();
   ret += genMealInput();
   ret += genIngredientInput();
@@ -317,21 +343,21 @@ function genInputs() {
   
 var defaultFreeText = '(type stuff here)';
 function genFreeTextInput() {
-  return '<tr style="height:4em;"><td colspan=2><b>Free text</b></td></tr>'
-   +'<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:100%;height:150px;border:1px solid #AAA;vertical-align:top;padding:15px;">' + defaultFreeText + '</textarea></td></tr>';
+  return '<tr><td colspan=2><table style="width:100%" id="table_freetext"><tr style="height:3em;"><td colspan=2><b>Free text</b></td></tr>'
+   +'<tr><td colspan=2 style="align:left;"><textarea id="freeText" style="width:100%;height:150px;border:1px solid #AAA;vertical-align:top;padding:15px;">' + defaultFreeText + '</textarea></td></tr></table></td></tr>';
 }
 
 
 function genMealInput() {
-  var ret = '<tr style="height:3em;"><td colspan=2 style="align:left;"><b>Meals</b>';
+  var ret = '<tr><td colspan=2><table style="width:100%" id="table_m"><tr style="height:3em;"><td colspan=2 style="align:left;"><b>Meals</b>';
 
   var i = 0;
   Object.keys(meals).forEach(function(meal) {
     if (meal == "") return;
-    ret += i++ % 2 == 0 ? '</td></tr><tr><td>' : '</td><td>';
+    ret += i++ % 2 == 0 ? '</td></tr><tr><td style="width:50%">' : '</td><td>';
     ret += cbox('m', meal);
   });
-  ret += '</td></tr>'
+  ret += '</td></tr></table></td></tr>'
 
   return ret;
 }
@@ -344,7 +370,7 @@ function genIngredientInput() {
       ret += '<tr><td width=50%>' + cbox('i', row[0], type) + '</td><td>' + cbox('i', row[1], type) + '</td></tr>';
     else {
       if (row.match(/^[pvod]$/) != null) type = row;
-      else ret += '<tr style="height:5em;vertical-align:bottom;"><td colspan=2 style="align:left;"><b>' + row + '</b></td></tr>';
+      else ret += '<tr style="height:3em;vertical-align:bottom;"><td colspan=2 style="align:left;"><b>' + row + '</b></td></tr>';
     }
   });
   return ret;
@@ -375,7 +401,8 @@ function invertCheckboxes() {
 <button onclick="javascript:printMode();">Print selected &nbsp; 🖨 </button> 
 &nbsp;&nbsp;
 <button onclick="javascript:menuMode();">Print menu &nbsp; 🖨 </button> 
-<br/>
+&nbsp;&nbsp;
+<button onclick="javascript:planningMode();">Print plan-the-week list &nbsp; 🖨 </button> 
 <br/>
 </div>
 <table id=mainTable cellspacing=0 cellpadding=4 width=100%><tr>
