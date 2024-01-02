@@ -35,7 +35,7 @@ p.label input {
   vertical-align: bottom;
 }
 p.label {
-  padding: 2;
+  padding: 1;
   vertical-align: top;
 }
 div.weekdays h1 {
@@ -114,8 +114,8 @@ var meals = {
  ,"Nigerian Beef Stew"                                       : "1.5 lbs flank steak| 5 plum tomatoes, 1 red bell pepper, 1 red onion, 2 habanero peppers, 6 cloves garlic | 12oz tomato paste, 2 cubes beef stock, 1 bay leaf, 1 tsp paprika, 1 tsp curry powder"
  ,"One-pan parsley Chicken & potatoes"                       : "1.5 lbs boneless skinless chicken thighs | 1.5 lbs yukon gold potatoes, 2 garlic cloves, 1 cup italian parsley, 1 lemon| 1/4 cup apple cider vinegar, 1 cup low-salt chicken broth, 1 tbsp dijon"
  ,"Orechiette w Sausage & Fennel"                            : "1 lb sweet italian sausage no casings | 1 bulb fennel| 16oz bowtie pasta, dry white wine,chili flakes | 1/2 cup grated parmesan"
- ,"pot stickers with Tomato Sauce"                           : "frozen dumplings| garlic, thyme| canned tomatoes, fish sauce, brown sugar, olive oil, red pepper flakes | cream, parmesan"
- ,"power Outage pasta"                                       : "16 oz sweet italian sausage | 1 large onion, 1 red bell pepper, 1 yellow bell pepper, 4 garlic cloves, 1/2 cup italian parsley| 1/4 cup dry white wine, 1x28oz whole tomatoes, 1 tsp dried oregano, 1 lb bucatini| 1/2 cup gran padano"
+ ,"Pot stickers with Tomato Sauce"                           : "frozen dumplings| garlic, thyme| canned tomatoes, fish sauce, brown sugar, olive oil, red pepper flakes | cream, parmesan"
+ ,"Power Outage pasta"                                       : "16 oz sweet italian sausage | 1 large onion, 1 red bell pepper, 1 yellow bell pepper, 4 garlic cloves, 1/2 cup italian parsley| 1/4 cup dry white wine, 1x28oz whole tomatoes, 1 tsp dried oregano, 1 lb bucatini| 1/2 cup gran padano"
  ,"Rice and Bean Bowl"                                       : "| 2 cans black beans, 1 bell pepper, cilantro, limes, white onion, avocado, cherry tomatoes, lettuce | taco seasoning"
  ,"Rigatoni Bolognese (doubled)"                             : "2 lbs ground beef | 2 yellow onion, 2 celery stalk, 2 carrot, 1/2 cup italian parsley, 16 basil leaves, 4 garlic cloves| olive oil, garlic bread 1 lb rigatoni, 2x28 oz crushed tomatoes| 1/2 cup pecorino romano"
  ,"Roast Chicken with Saffron and Lemons"                    : "1 free-range chicken | fresh rosemary, flat-leaf parsley, 2 lemons | 2 tsp saffron threads, peppercorns"
@@ -350,12 +350,13 @@ function genFreeTextInput() {
 
 
 function genMealInput() {
-  var ret = '<tr><td colspan=2><table style="width:100%" id="table_m"><tr style="height:3em;"><td colspan=2 style="align:left;"><b>Meals</b>';
+  var ret = '<tr><td colspan=2><table style="width:100%" id="table_m"><tr style="height:3em;"><td colspan=2 style="align:left;"><b>Meals</b></tr></td><td style="width:50%;">';
 
+  var split = Math.ceil(Object.keys(meals).length / 2);
   var i = 0;
-  Object.keys(meals).forEach(function(meal) {
+  Object.keys(meals).forEach(meal => {
     if (meal == "") return;
-    ret += i++ % 2 == 0 ? '</td></tr><tr><td style="width:50%">' : '</td><td>';
+    ret += i++ == split ? '</td><td style="width:50%">' : '';
     ret += cbox('m', meal);
   });
   ret += '</td></tr></table></td></tr>'
