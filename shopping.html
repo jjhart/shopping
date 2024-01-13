@@ -42,7 +42,18 @@ div.weekdays h1 {
   font-size: 16pt;
   padding-bottom: 80px;
 }
-  
+h3 {
+  margin-top: 30px;
+  margin-bottom: 5px;
+}
+@media print {
+  body {
+    width: 100%;
+    height: 100%;
+    page-break-after: always;
+    page-break-inside: never;
+  }
+}  
 </style>
 
 <script>
@@ -60,7 +71,7 @@ var ingredients = [
 "Salad Fixings & Veg", "v",
  [ "Lettuce"          , "Bell Peppers"       ],
  [ "Avocados"         , "Carrots"            ],
- [ "Red Onion"        , "Green Onion"        ],
+ [ "Red Onion"        , "Scallions"          ],
  [ "Cherry Tomatoes"  , "Regular Tomatoes"   ],
  [ ""                 , "Cucumber"           ],
 
@@ -116,7 +127,7 @@ var meals = {
  ,"Orechiette w Sausage & Fennel"                            : "1 lb sweet italian sausage no casings | 1 bulb fennel| 16oz bowtie pasta, dry white wine,chili flakes | 1/2 cup grated parmesan"
  ,"Pot stickers with Tomato Sauce"                           : "frozen dumplings| garlic, thyme| canned tomatoes, fish sauce, brown sugar, olive oil, red pepper flakes | cream, parmesan"
  ,"Power Outage pasta"                                       : "16 oz sweet italian sausage | 1 large onion, 1 red bell pepper, 1 yellow bell pepper, 4 garlic cloves, 1/2 cup italian parsley| 1/4 cup dry white wine, 1x28oz whole tomatoes, 1 tsp dried oregano, 1 lb bucatini| 1/2 cup gran padano"
- ,"Rice and Bean Bowl"                                       : "| 2 cans black beans, 1 bell pepper, cilantro, limes, white onion, avocado, cherry tomatoes, lettuce | taco seasoning"
+ ,"Rice and Bean Bowl"                                       : "| 1 bell pepper, cilantro, limes, white onion, avocado, cherry tomatoes, lettuce | 2 cans black beans, taco seasoning"
  ,"Rigatoni Bolognese (doubled)"                             : "2 lbs ground beef | 2 yellow onion, 2 celery stalk, 2 carrot, 1/2 cup italian parsley, 16 basil leaves, 4 garlic cloves| olive oil, garlic bread 1 lb rigatoni, 2x28 oz crushed tomatoes| 1/2 cup pecorino romano"
  ,"Roast Chicken with Saffron and Lemons"                    : "1 free-range chicken | fresh rosemary, flat-leaf parsley, 2 lemons | 2 tsp saffron threads, peppercorns"
  ,"Ruf Ruf Fajitas"                                          : "2 lbs peeled deveined shrimp | 2 avocados, 2/3 cup sour cream, 4 jalapenos, 2 cups cilantro, 6 limes, 2 bell peppers, 6 pineapple rings| fajita seasoning, 8 flour tortillas, vegetable oil"
@@ -135,7 +146,7 @@ var meals = {
  ,"Thai Chicken with Basil (doubled)"                        : "2 lbs boneless skinless chicken breast | 6 shallots, 4 cups basil (2 big clamshells), 6 garlic cloves, 6 thai chiles | fish sauce, oyster sauce, white vinegar, sugar"
  ,"Thai Cucumber Salad"                                      : "| red onion, 2 cucumbers, 1/3 cup cilantro, 1/2 cup salted peanuts, 1 jalapeno, 3 limes, garlic| fish sauce, vegetable oil"
  ,"Tofu Stir Fry"                                            : "| carrots, red cabbage, bell pepper, thai eggplant, onion, celery, cherry tomatoes | tofu"
- ,"Tom Kha Gai (doubled)"                                    : "3 lbs boneless skinless chicken thighs| 2 carrots, 6 limes, 1/2 cup cilantro, 4 tbsp thai basil, green onions, 6 lemongrass stalks, ginger, 12 lime leaves, 2 shallots, 6 thai chiles, 8 oz shiitake mushrooms| 6 cups low-sodium chicken broth, 1/2 cup fish sauce, 2x13.5 oz coconut milk, chili oil sauce"
+ ,"Tom Kha Gai (doubled)"                                    : "3 lbs boneless skinless chicken thighs| 2 carrots, 6 limes, 1/2 cup cilantro, 4 tbsp thai basil, scallions, 6 lemongrass stalks, ginger, 12 lime leaves, 2 shallots, 6 thai chiles, 8 oz shiitake mushrooms| 6 cups low-sodium chicken broth, 1/2 cup fish sauce, 2x13.5 oz coconut milk, chili oil sauce"
  ,"Veggie Enchiladas"                                        : "| sliced cremini mushrooms, orange bell peppers, yellow onion, zucchini, cilantro, 1 lime | flour tortillas, frozen corn, cumin, chile powder, pinto beans, frontera enchilada sauce| shredded pepper jack, sour cream"
  ,"Wilted Spinach and Apple Salad"                           : "5 slices lean bacon | 2 apples - fuji/gala/braeburn, 2 shallots, 10 oz spinach| 1.25 cups apple cider, 1/4 cup cider vinegar, 1/4 cup apple juice concentrate, dijon mustard, 1/2 cup walnuts | 2 eggs"
  ,"Yogurt-and-Herb pork Tenderloin"                          : "2x12 oz pork tenderloin | 2tbsp fresh mint | | 1/2 cup plain greek yogurt, tzatziki"
@@ -148,20 +159,25 @@ var meals = {
 //--------------------------------------------------------------------------------
 
 /** for printing N copies for weekly planning */
-function planningMode() {
+function printPlanTheWeekShoppingList() {
   // meals
   rmNode(document.getElementById('table_m').parentNode.parentNode); // remove enclosing tr
-  rmNode(document.getElementById('table_freetext').parentNode.parentNode);
   rmNode(document.getElementById('buttons'));
+
+  document.getElementById('table_freetext').parentNode.innerHTML='<div style="height:70px;"><b>Other</b></div>';
+
+  document.getElementById('checklist').style.border="";
+  document.getElementById('output').style.border="";
+
   output.innerHTML = `
   <div class="weekdays">
-  <h1>Sunday</h1>
-  <h1>Monday</h1>
-  <h1>Tuesday</h1>
-  <h1>Wednesday</h1>
-  <h1>Thursday</h1>
-  <h1>Friday</h1>
-  <h1>Saturday</h1>
+  <h1 style="padding-top: 20px;">Sunday</h1>
+  <h1 style="padding-top: 20px;">Monday</h1>
+  <h1 style="padding-top: 20px;">Tuesday</h1>
+  <h1 style="padding-top: 20px;">Wednesday</h1>
+  <h1 style="padding-top: 20px;">Thursday</h1>
+  <h1 style="padding-top: 20px;">Friday</h1>
+  <h1 style="padding-top: 20px;">Saturday</h1>
   </div>
   `;
 }
@@ -170,7 +186,8 @@ function rmNode(child) {
 }
 
 /** categorized by meal */
-function menuMode() {
+function printByMeal() {
+  genLinks(); // this printable view just restyles shopping links
   var checklist = document.getElementById('checklist');
   var output = document.getElementById('output');
   var buttons = document.getElementById('buttons');
@@ -183,13 +200,13 @@ function menuMode() {
 }
 
 /** categorized by grocery department */
-function printMode() {
+function printByAisle() {
   var checklist = document.getElementById('checklist');
   var output = document.getElementById('output');
   var buttons = document.getElementById('buttons');
 
   // rearrange shoplist by section
-  output.innerHTML = genPrintableList();
+  output.innerHTML = genAisles();
 
   // yes, this part could be done with CSS - but why? ;)
   checklist.innerHTML = '';
@@ -201,14 +218,14 @@ function printMode() {
 }
 
 
-function genPrintableList() {
+function genAisles() {
   var ret = '', tmp;
 
   // ordered by grocery section: veg, protein, other, dairy
-  ret += '<h3>Fruit & Veg</h3>' + genPrintable('v');
-  ret += '<h3>Protein</h3>'     + genPrintable('p');
-  ret += '<h3>Dairy</h3>'       + genPrintable('d');
-  ret += '<h3>Other</h3>'       + genPrintable('o');
+  ret += '<h3>Fruit & Veg</h3>' + genAisle('v');
+  ret += '<h3>Protein</h3>'     + genAisle('p');
+  ret += '<h3>Dairy</h3>'       + genAisle('d');
+  ret += '<h3>Other</h3>'       + genAisle('o');
 
   return ret;
 }
@@ -222,11 +239,11 @@ function extractType(type, recipe) {
   return null;
 }
 
-function genPrintable(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
+function genAisle(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
   var retList = [];
 
   // meals
-  document.getElementsByName('cbox_m').forEach(function(cbox) {
+  document.getElementsByName('cbox_m').forEach(cbox => {
     if (! cbox.checked ) return;
     var name = cbox.value;
     var list = extractType(type, meals[name]);
@@ -235,18 +252,18 @@ function genPrintable(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
   });
 
   // standards
-  document.getElementsByName('cbox_i').forEach(function(cbox) {
+  document.getElementsByName('cbox_i').forEach(cbox => {
     if (! cbox.checked ) return;
     if (cbox.dataset.type != type) return;
     retList.push(cbox.value);
   });
 
-  document.getElementById('freeText').value.split('\n').forEach(function(line) { 
+  document.getElementById('freeText').value.split('\n').forEach(line => {
     if (line == defaultFreeText) return;
-    if (line.endsWith('('+type+')') || line.match(/\([povd]\)$/) == null) retList.push(line);
+    if (line.endsWith('('+type+')') || (type == 'o' && line.match(/\([povd]\)$/) == null)) retList.push(line);
   });
 
-  return retList.sort().join('<br/>');
+  return retList.sort((a, b) => { return a.toLowerCase().localeCompare(b.toLowerCase()); }).join('<br/>');
 }
 
 
@@ -259,7 +276,7 @@ function genLinks() {
   ret += genFreeTextLinks(document.getElementById('freeText').value);
   ret += genMealLinks();
   ret += genChecklistLinks();
-  return ret;
+  document.getElementById('output').innerHTML = ret;
 }
 
 function genFreeTextLinks(text) {
@@ -398,13 +415,13 @@ function invertCheckboxes() {
 <br/><br/>
 <button onclick="javascript:invertCheckboxes();">(invert checkboxes)</button> 
 &nbsp;&nbsp;
-<button onclick="javascript:output.innerHTML = genLinks();">Shop selected</button> 
+<button onclick="javascript:genLinks();">Generate instacart links</button> 
 &nbsp;&nbsp;
-<button onclick="javascript:printMode();">Print selected &nbsp; 🖨 </button> 
+<button onclick="javascript:printByAisle();">Print selected, organized by aisle &nbsp; 🖨 </button> 
 &nbsp;&nbsp;
-<button onclick="javascript:menuMode();">Print menu &nbsp; 🖨 </button> 
+<button onclick="javascript:printByMeal();">Print selected, organized by meal &nbsp; 🖨 </button> 
 &nbsp;&nbsp;
-<button onclick="javascript:planningMode();">Print plan-the-week list &nbsp; 🖨 </button> 
+<button onclick="javascript:printPlanTheWeekShoppingList();">Print plan-the-week list &nbsp; 🖨 </button> 
 <br/>
 </div>
 <table id=mainTable cellspacing=0 cellpadding=4 width=100%><tr>
