@@ -153,6 +153,11 @@ var meals = {
  ,"Veggie Enchiladas"                                        : "| sliced cremini mushrooms, orange bell peppers, yellow onion, zucchini, cilantro, 1 lime | flour tortillas, frozen corn, cumin, chile powder, pinto beans, frontera enchilada sauce| shredded pepper jack, sour cream"
  ,"Wilted Spinach and Apple Salad"                           : "5 slices lean bacon | 2 apples - fuji/gala/braeburn, 2 shallots, 10 oz spinach| 1.25 cups apple cider, 1/4 cup cider vinegar, 1/4 cup apple juice concentrate, dijon mustard, 1/2 cup walnuts | 2 eggs"
  ,"Yogurt-and-Herb pork Tenderloin"                          : "2x12 oz pork tenderloin | 2tbsp fresh mint | | 1/2 cup plain greek yogurt, tzatziki"
+}
+var sides = {
+ ""                                                          : "PROTEIN | VEGETABLES | OTHER | DAIRY" // dummy entry so everything else can have leading comma for ease of alphasort
+ ,"Roasted Eggplant Salsa w/ Cilantro and Anchovy"                          : "| 2 eggplants, 12ox cherry tomatoes, 3 mild red chiles (optional), 2 cloves garlic, cilantro, basil, olive oil, 1 lemon | 3 anchovy fillets in olive oil| 4.5oz buffalo mozarella (optional)"
+
 };
 
 
@@ -254,6 +259,15 @@ function genAisle(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
       list.split(/ *, */).forEach(function(item) { retList.push(splitQuantity(item) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i style='font-size:70%'>" + name + "</i>"); });
   });
 
+  // sides
+  document.getElementsByName('cbox_s').forEach(cbox => {
+    if (! cbox.checked ) return;
+    var name = cbox.value;
+    var list = extractType(type, sides[name]);
+    if (list != null && list != '') 
+      list.split(/ *, */).forEach(function(item) { retList.push(splitQuantity(item) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i style='font-size:70%'>" + name + "</i>"); });
+  });
+
   // standards
   document.getElementsByName('cbox_i').forEach(cbox => {
     if (! cbox.checked ) return;
@@ -277,7 +291,7 @@ function genAisle(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
 function genLinks() {
   var ret = '';
   ret += genFreeTextLinks(document.getElementById('freeText').value);
-  ret += genMealLinks();
+  ret += genRecipeLinks();
   ret += genChecklistLinks();
   document.getElementById('output').innerHTML = ret;
 }
@@ -288,13 +302,21 @@ function genFreeTextLinks(text) {
   return ret;
 }
 
-function genMealLinks() {
+function genRecipeLinks() {
   var ret = '';
   var i=0;
   document.getElementsByName('cbox_m').forEach(function(cbox) {
     if (! cbox.checked ) return;
     var name = cbox.value;
     var list = meals[name];
+    ret += '<br/><b>' + name + '</b><br/>';
+    list.split(/ *[,|] */).forEach(function(item) { ret += genInstacartLink(item, true); });
+    ret += '</br>';
+  });
+  document.getElementsByName('cbox_s').forEach(function(cbox) {
+    if (! cbox.checked ) return;
+    var name = cbox.value;
+    var list = sides[name];
     ret += '<br/><b>' + name + '</b><br/>';
     list.split(/ *[,|] */).forEach(function(item) { ret += genInstacartLink(item, true); });
     ret += '</br>';
@@ -357,7 +379,8 @@ function splitQuantity(label) {
 function genInputs() {
   var ret = '<table id="checklistTable" style="width:100%;">';
   ret += genFreeTextInput();
-  ret += genMealInput();
+  ret += genRecipeInput("Meals", meals);
+  ret += genRecipeInput("Sides", sides);
   ret += genIngredientInput();
   return ret + '</table>';
 }
@@ -369,15 +392,16 @@ function genFreeTextInput() {
 }
 
 
-function genMealInput() {
-  var ret = '<tr><td colspan=2><table style="width:100%" id="table_m"><tr style="height:3em;"><td colspan=2 style="align:left;"><b>Meals</b></tr></td><td style="width:50%;">';
+function genRecipeInput(label, list) {
+  var ret = '<tr><td colspan=2><table style="width:100%" id="table_m"><tr style="height:3em;"><td colspan=2 style="align:left;"><b>' + label + '</b></tr></td><td style="width:50%;">';
+  var cboxTag = label.substring(0,1).toLowerCase();
 
-  var split = Math.ceil(Object.keys(meals).length / 2);
+  var split = Math.ceil(Object.keys(list).length / 2);
   var i = 0;
-  Object.keys(meals).forEach(meal => {
+  Object.keys(list).forEach(meal => {
     if (meal == "") return;
     ret += i++ == split ? '</td><td style="width:50%">' : '';
-    ret += cbox('m', meal);
+    ret += cbox(cboxTag, meal);
   });
   ret += '</td></tr></table></td></tr>'
 
