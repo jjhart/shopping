@@ -170,7 +170,8 @@ var sides = {
 /** for printing N copies for weekly planning */
 function printPlanTheWeekShoppingList() {
   // meals
-  rmNode(document.getElementById('table_m').parentNode.parentNode); // remove enclosing tr
+  rmNode(document.getElementById('table_Meals').parentNode.parentNode); // remove enclosing tr
+  rmNode(document.getElementById('table_Sides').parentNode.parentNode); // remove enclosing tr
   rmNode(document.getElementById('buttons'));
 
   document.getElementById('table_freetext').parentNode.innerHTML='<div style="height:70px;"><b>Other</b></div>';
@@ -394,7 +395,7 @@ function genFreeTextInput() {
 
 
 function genRecipeInput(label, list) {
-  var ret = '<tr><td colspan=2><table style="width:100%" id="table_m"><tr style="height:3em;"><td colspan=2 style="align:left;"><b>' + label + '</b></tr></td><td style="width:50%;">';
+  var ret = '<tr><td colspan=2><table style="width:100%" id="table_' + label + '"><tr style="height:3em;"><td colspan=2 style="align:left;"><b>' + label + '</b></tr></td><td style="width:50%;">';
   var cboxTag = label.substring(0,1).toLowerCase();
 
   var split = Math.ceil(Object.keys(list).length / 2);
