@@ -282,7 +282,12 @@ function genAisle(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
     if (line.endsWith('('+type+')') || (type == 'o' && line.match(/\([povd]\)$/) == null)) retList.push(line);
   });
 
-  return retList.sort((a, b) => { return a.toLowerCase().localeCompare(b.toLowerCase()); }).join('<br/>');
+  var pfx = "<div onclick='javascript:event.target.innerHTML=\"\";'>"
+  return pfx 
+    + retList
+        .sort((a, b) => { return a.toLowerCase().localeCompare(b.toLowerCase()); })
+        .join("<br></div>" + pfx);
+    + '</div>';
 }
 
 
