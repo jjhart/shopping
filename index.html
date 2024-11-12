@@ -253,81 +253,94 @@ function extractType(type, recipe) {
 }
 
 function genAisle(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
-  var retList = [];
+  var items = new Array(); // will fill with parsed items, then sort & group
 
-  // meals
-  document.getElementsByName('cbox_m').forEach(cbox => {
+  var addRecipe = cbox => {
     if (! cbox.checked ) return;
     var recipe = cbox.value;
     var list = extractType(type, meals[recipe]);
     if (list != null && list != '') 
-      list.split(/ *, */).forEach(function(str) { retList.push(fullName(parse(str)) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i style='font-size:70%'>" + recipe + "</i>"); });
-  });
+      list.split(/ *, */).forEach(function(str) { if (str == '') return; var item = parse(str); item.recipe = recipe; items.push(item); });
+  };
 
-  // sides
-  document.getElementsByName('cbox_s').forEach(cbox => {
-    if (! cbox.checked ) return;
-    var recipe = cbox.value;
-    var list = extractType(type, sides[recipe]);
-    if (list != null && list != '') 
-      list.split(/ *, */).forEach(function(str) { retList.push(fullName(parse(str)) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i style='font-size:70%'>" + recipe + "</i>"); });
-  });
+  document.getElementsByName('cbox_m').forEach(addRecipe); // meals
+  document.getElementsByName('cbox_s').forEach(addRecipe); // sides
 
   // standards
   document.getElementsByName('cbox_i').forEach(cbox => {
     if (! cbox.checked ) return;
     if (cbox.dataset.type != type) return;
-    retList.push(cbox.value);
+    items.push(parse(cbox.value));
   });
 
-  // TODO: 
-  // sort by item.name & combine runs into one entry
-  // or make map of item.name => [ { item }, { item} ], and coalesce that way
   document.getElementById('freeText').value.split('\n').forEach(line => {
     if (line == defaultFreeText) return;
     if (line == "") return;
 
-    if (line.startsWith(type + ' ')) retList.push(line.substring(2));
-    else if (type == 'o' && null == line.match('^[povd] ')) retList.push(line);
+    if (line.startsWith(type + ' ')) items.push(parse(line.substring(2)));
+    else if (type == 'o' && null == line.match('^[povd] ')) items.push(parse(line));
   });
 
-  var pfx = "<div onclick='javascript:event.target.innerHTML=\"\";'>"
+  // combine items, mutating items in-place (gasp)
+  var grouped = new Map();
+  items.forEach(item => {
+    var got = grouped.get(item.name);
+    if (got == null) grouped.set(item.name, item);
+    else {
+      got.count += (item.count == 0 ? 1 : item.count);
+      if (item.units != '' && item.units != got.units) got.units += (got.units == '' ? '' : ', ') + item.units;
+      if (item.recipe != '') got.recipe += (got.recipe == '' ? '' : ', ') + item.recipe;
+    }
+  });
+
+  var sorted = Array.from(grouped.keys()).sort((a, b) => { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+  var pfx = "<div onclick='javascript:event.target.innerHTML=\"\";'>";
   return pfx 
-    + retList
-        .sort((a, b) => { return a.toLowerCase().localeCompare(b.toLowerCase()); })
-        .join("<br></div>" + pfx);
+    + sorted
+        .map(k => fullName(grouped.get(k)))
+        .join("<br></div>" + pfx)
     + '</div>';
 }
 
 
 /*
-'5 oz paste'     => { count: 5 , units: 'oz' , name: 'paste'        , parsed: true }
-'1 yellow onion' => { count: 1 , units: ''   , name: 'yellow onion' , parsed: true }
-'carrots'        => { count: 1 , units: ''   , name: 'carrots'      , parsed: false }
+'5 oz paste'     => { count: 5 , units: 'oz' , name: 'paste'         }
+'1 yellow onion' => { count: 1 , units: ''   , name: 'yellow onion'  }
+'carrots'        => { count: 0 , units: ''   , name: 'carrots'       }
 */
 function parse(label) {
   var quantity = label.match(/(([0-9/.]+)x?(?: (cups?|lbs?|oz|tsps?|tbsps?|pieces?|inche?s?|cans?|cloves?) )?)?(.*)/);
   return quantity
     ? { 
-      count: quantity[2] ? quantity[2] : 1,
+      count: quantity[2] ? Number(quantity[2]) : 0,
       units: quantity[3] ? quantity[3].trim() : '',
       name: quantity[4] ? quantity[4].trim() : '',
-      parsed: true
+      recipe: ''
       } 
     : {
-      count: 1,
+      count: 0,
       units: '',
       name: label,
-      parsed: false
+      recipe: ''
     };
 }
 
 function fullName(item) {
-  if (!item.parsed) return item.name;
+  var ct = '';
+  if (item.count > 0) {
+    ct = ' (' + item.count;
+    if (item.units != '') ct += ' ' + item.units;
+    ct += ')';
+  }
 
-  var ct = item.count;
-  if (item.units != '') ct += ' ' + item.units;
-  return item.name + ' (' + ct + ')';
+  var recipes = '';
+  if (item.recipe != '') {
+    recipes = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i style='font-size:70%'>" + item.recipe + "</i>";
+  }
+
+  return item.name 
+    + ct
+    + recipes;
 }
 
 
@@ -398,7 +411,7 @@ function genChecklistLinks() {
 }
 
 function genInstacartUrl(item) {
-  var nonce = item.parsed
+  var nonce = item.count > 0
     ? '--------' + item.count + '-' + item.units.toUpperCase() + '------------' + NOW
     : NOW;
 
