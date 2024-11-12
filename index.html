@@ -198,38 +198,18 @@ function rmNode(child) {
   child.parentNode.removeChild(child);
 }
 
-/** categorized by meal */
-function printByMeal() {
-  genLinks(); // this printable view just restyles shopping links
-  var checklist = document.getElementById('checklist');
+/** make the right-hand pane the only pane */
+function setRightPanel(str) {
+  document.getElementById('output').innerHTML = str;
+}
+function hideLeftPanel() {
+  document.getElementById('checklist').style.display = 'none';
+  document.getElementById('buttons').style.display = 'none';
+
   var output = document.getElementById('output');
-  var buttons = document.getElementById('buttons');
-  checklist.innerHTML = '';
-  checklist.style.width = '0px';
-  checklist.style.border = '';
   output.style.width='100%';
   output.style.border='';
-  buttons.innerHTML='';
 }
-
-/** categorized by grocery department */
-function printByAisle() {
-  var checklist = document.getElementById('checklist');
-  var output = document.getElementById('output');
-  var buttons = document.getElementById('buttons');
-
-  // rearrange shoplist by section
-  output.innerHTML = genAisles();
-
-  // yes, this part could be done with CSS - but why? ;)
-  checklist.innerHTML = '';
-  checklist.style.width = '0px';
-  checklist.style.border = '';
-  output.style.width='100%';
-  output.style.border='';
-  buttons.innerHTML='';
-}
-
 
 function genAisles() {
   var ret = '', tmp;
@@ -260,13 +240,13 @@ function genAisle(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
     var recipe = cbox.value;
     var list = extractType(type, meals[recipe]);
     if (list != null && list != '') 
-      list.split(/ *, */).forEach(function(str) { if (str == '') return; var item = parse(str); item.recipe = recipe; items.push(item); });
+      list.split(/ *, */).forEach(function(str) { if (str != '') items.push(parse(str, recipe)); });
   };
 
   document.getElementsByName('cbox_m').forEach(addRecipe); // meals
   document.getElementsByName('cbox_s').forEach(addRecipe); // sides
 
-  // standards
+  // staples
   document.getElementsByName('cbox_i').forEach(cbox => {
     if (! cbox.checked ) return;
     if (cbox.dataset.type != type) return;
@@ -308,20 +288,21 @@ function genAisle(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
 '1 yellow onion' => { count: 1 , units: ''   , name: 'yellow onion'  }
 'carrots'        => { count: 0 , units: ''   , name: 'carrots'       }
 */
-function parse(label) {
+function parse(label, recipe) {
+  if (recipe == null || recipe == '') recipe = 'staple';
   var quantity = label.match(/(([0-9/.]+)x?(?: (cups?|lbs?|oz|tsps?|tbsps?|pieces?|inche?s?|cans?|cloves?) )?)?(.*)/);
   return quantity
     ? { 
       count: quantity[2] ? Number(quantity[2]) : 0,
       units: quantity[3] ? quantity[3].trim() : '',
       name: quantity[4] ? quantity[4].trim() : '',
-      recipe: ''
+      recipe: recipe
       } 
     : {
       count: 0,
       units: '',
       name: label,
-      recipe: ''
+      recipe: recipe
     };
 }
 
@@ -334,8 +315,8 @@ function fullName(item) {
   }
 
   var recipes = '';
-  if (item.recipe != '') {
-    recipes = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i style='font-size:70%'>" + item.recipe + "</i>";
+  if (item.recipe != 'staple') {
+    recipes = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i style='font-size:70%'>" + item.recipe.replaceAll(' \(2x\)', '') + "</i>";
   }
 
   return item.name 
@@ -367,7 +348,7 @@ function genLinks() {
   ret += genFreeTextLinks(document.getElementById('freeText').value);
   ret += genRecipeLinks();
   ret += genChecklistLinks();
-  document.getElementById('output').innerHTML = ret;
+  return ret;
 }
 
 function genFreeTextLinks(text) {
@@ -496,11 +477,11 @@ function invertCheckboxes() {
 <br/><br/>
 <button onclick="javascript:invertCheckboxes();">(invert checkboxes)</button> 
 &nbsp;&nbsp;
-<button onclick="javascript:genLinks();">Generate instacart links</button> 
+<button onclick="javascript:setRightPanel(genLinks());">Generate instacart links</button> 
 &nbsp;&nbsp;
-<button onclick="javascript:printByAisle();">Print selected, organized by aisle &nbsp; 🖨 </button> 
+<button onclick="javascript:setRightPanel(genAisles());hideLeftPanel();">Print selected, organized by aisle &nbsp; 🖨 </button> 
 &nbsp;&nbsp;
-<button onclick="javascript:printByMeal();">Print selected, organized by meal &nbsp; 🖨 </button> 
+<button onclick="javascript:setRightPanel(genLinks());hideLeftPanel();">Print selected, organized by meal &nbsp; 🖨 </button> 
 &nbsp;&nbsp;
 <button onclick="javascript:printPlanTheWeekShoppingList();">Print plan-the-week list &nbsp; 🖨 </button> 
 <br/>
