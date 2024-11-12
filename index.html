@@ -202,6 +202,13 @@ function rmNode(child) {
 function setRightPanel(str) {
   document.getElementById('output').innerHTML = str;
 }
+function unhideLeftPanel() {
+  document.getElementById('checklist').style.display = '';
+  document.getElementById('buttons').style.display = '';
+  var output = document.getElementById('output');
+  output.style.width='50%';
+  output.style.border='1px solid lightgrey;';
+}
 function hideLeftPanel() {
   document.getElementById('checklist').style.display = 'none';
   document.getElementById('buttons').style.display = 'none';
@@ -209,6 +216,8 @@ function hideLeftPanel() {
   var output = document.getElementById('output');
   output.style.width='100%';
   output.style.border='';
+
+  output.innerHTML += '<br/><a href="javascript:unhideLeftPanel();" style="font-size:70%;">&gt;&gt;</a>';
 }
 
 function genAisles() {
@@ -284,12 +293,13 @@ function genAisle(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
 
 
 /*
-'5 oz paste'     => { count: 5 , units: 'oz' , name: 'paste'         }
-'1 yellow onion' => { count: 1 , units: ''   , name: 'yellow onion'  }
-'carrots'        => { count: 0 , units: ''   , name: 'carrots'       }
+('5 oz paste', 'foo') => { count: 5, units: 'oz', name: 'paste'       , recipe: 'foo'    }
+('1 yellow onion')    => { count: 1, units: ''  , name: 'yellow onion', recipe: 'staple' }
+('carrots', '')       => { count: 0, units: ''  , name: 'carrots'     , recipe: 'staple' }
 */
 function parse(label, recipe) {
   if (recipe == null || recipe == '') recipe = 'staple';
+
   var quantity = label.match(/(([0-9/.]+)x?(?: (cups?|lbs?|oz|tsps?|tbsps?|pieces?|inche?s?|cans?|cloves?) )?)?(.*)/);
   return quantity
     ? { 
