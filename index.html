@@ -10,6 +10,11 @@ body, table, p, button, input, textarea {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.8);
 }
+summary {
+  font-size: 120%;
+  height: 1.5em;
+  padding-top: 10px;
+}
 :link {
   color: green;
   text-decoration: none;
@@ -442,7 +447,7 @@ function genFreeTextInput() {
 
 
 function genRecipeInput(label, list) {
-  var ret = '<tr><td colspan=2><table style="width:100%" id="table_' + label + '"><tr style="height:3em;"><td colspan=2 style="align:left;"><b>' + label + '</b></tr></td><td style="width:50%;">';
+  var ret = '<tr><td colspan=2><details><summary style="font-size:130%;">' + label + '</summary><table style="width:100%" id="table_' + label + '"><td style="width:50%;">';
   var cboxTag = label.substring(0,1).toLowerCase();
 
   var split = Math.ceil(Object.keys(list).length / 2);
@@ -452,7 +457,7 @@ function genRecipeInput(label, list) {
     ret += i++ == split ? '</td><td style="width:50%">' : '';
     ret += cbox(cboxTag, meal);
   });
-  ret += '</td></tr></table></td></tr>'
+  ret += '</td></tr></table></details></td></tr>'
 
   return ret;
 }
