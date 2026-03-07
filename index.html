@@ -222,8 +222,16 @@ function printPlanTheWeekShoppingList() {
   </div>
   `;
 }
+
+var removed = [];
 function rmNode(child) {
+  removed.push( { p: child.parentNode, c: child } );
   child.parentNode.removeChild(child);
+}
+function undoLastRm() {
+  if (removed.length == 0) return;
+  var last = removed.pop();
+  last.p.appendChild(last.c);
 }
 
 /** make the right-hand pane the only pane */
@@ -245,17 +253,17 @@ function hideLeftPanel() {
   output.style.width='100%';
   output.style.border='';
 
-  output.innerHTML += '<br/><a href="javascript:unhideLeftPanel();" style="font-size:70%;">&gt;&gt;</a>';
+  output.innerHTML += '<br/><button onclick="javascript:undoLastRm();" style="margin-right: 10px;">⎌</button><a href="javascript:unhideLeftPanel();" style="font-size:70%;">&gt;&gt;</a>';
 }
 
 function genAisles() {
   var ret = '', tmp;
 
   // ordered by grocery section: veg, protein, other, dairy
-  ret += '<h3>Fruit & Veg</h3>' + genAisle('v');
-  ret += '<h3>Protein</h3>'     + genAisle('p');
-  ret += '<h3>Dairy</h3>'       + genAisle('d');
-  ret += '<h3>Other</h3>'       + genAisle('o');
+  ret += '<h3>Fruit & Veg</h3><div id="aisle_v">' + genAisle('v') + '</div>';
+  ret += '<h3>Protein</h3><div id="aisle_p">'     + genAisle('p') + '</div>';
+  ret += '<h3>Dairy</h3><div id="aisle_d">'       + genAisle('d') + '</div>';
+  ret += '<h3>Other</h3><div id="aisle_o">'       + genAisle('o') + '</div>';
 
   return ret;
 }
@@ -311,12 +319,8 @@ function genAisle(type) { // one of 'v'egetable, 'p'rotein, 'd'airy, 'o'ther
   });
 
   var sorted = Array.from(grouped.keys()).sort((a, b) => { return a.toLowerCase().localeCompare(b.toLowerCase()); });
-  var pfx = "<div onclick='javascript:event.target.innerHTML=\"\";'>";
-  return pfx 
-    + sorted
-        .map(k => fullName(grouped.get(k)))
-        .join("<br></div>" + pfx)
-    + '</div>';
+  if (sorted.length == 0) return '';
+  return sorted.map(k => "<div onclick='javascript:rmNode(event.target);'>" + fullName(grouped.get(k)) + "</div>").join("");
 }
 
 
@@ -520,6 +524,8 @@ function invertCheckboxes() {
 <body onload="javascript:checklist.innerHTML = genInputs();">
 <div id="buttons">
 <br/><br/>
+<button onclick="javascript:undoLastRm();">⎌</button> 
+&nbsp;&nbsp;
 <button onclick="javascript:invertCheckboxes();">(invert checkboxes)</button> 
 &nbsp;&nbsp;
 <button onclick="javascript:setRightPanel(genLinks());">Generate instacart links</button> 
